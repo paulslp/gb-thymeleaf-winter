@@ -12,10 +12,9 @@ import ru.gb.gbthymeleafwinter.dao.ProductDao;
 import ru.gb.gbthymeleafwinter.entity.Product;
 import ru.gb.gbthymeleafwinter.entity.enums.Status;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -58,11 +57,10 @@ public class ProductService {
 
     }
 
-
-
-
-
-
+    @Transactional(readOnly = true)
+    Set<Product> findAllByIdIn(Set<Long> ids) {
+        return productDao.findAllByIdIn(ids);
+    }
 
 
     public void disableById(Long id) {
