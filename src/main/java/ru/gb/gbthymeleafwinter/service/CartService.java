@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.gb.gbthymeleafwinter.dao.CartDao;
 import ru.gb.gbthymeleafwinter.entity.Product;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -17,12 +19,20 @@ public class CartService {
 
     private final ProductService productService;
 
-    public void save(Long productId) {
-        cartDao.addProduct(productId);
+    public Long insertProduct(Long productId) {
+        return cartDao.insertProduct(productId);
     }
 
-    public Set<Product> findCartProducts() {
-        return productService.findAllByIdIn(cartDao.getProductIds());
+    public Long updateProduct(Long productId) {
+        return cartDao.updateProduct(productId);
+    }
+
+    public Map<Product, Integer> findCartProducts() {
+        Map<Product, Integer> resultMap = new HashMap<>();
+        Map<Long, Integer> productIdMap = cartDao.getProductIdMap();
+        Set<Product> productSet = productService.findAllByIdIn(cartDao.getProductIdMap().keySet());
+        productSet.forEach(product -> resultMap.put(product, productIdMap.get(product.getId())));
+        return resultMap;
     }
 
     public void deleteById(Long id) {

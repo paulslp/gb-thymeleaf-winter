@@ -6,26 +6,33 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Setter
 @Getter
 public class CartDao {
 
-    private Set<Long> productIds = new HashSet<>();
+    private Map<Long, Integer> productIdMap = new HashMap<>();
 
     @PostConstruct
     void init() {
-        productIds = new HashSet<>();
-    }
-
-    public boolean addProduct(Long productId) {
-        return productIds.add(productId);
+        productIdMap = new HashMap<>();
     }
 
     public void deleteById(Long id) {
-        productIds.removeIf(it -> it.equals(id));
+        productIdMap.remove(id);
+    }
+
+    public Long insertProduct(Long productId) {
+        productIdMap.put(productId, 1);
+        return productId;
+    }
+
+    public Long updateProduct(Long productId) {
+        Integer currentCount = productIdMap.get(productId);
+        productIdMap.put(productId, currentCount + 1);
+        return productId;
     }
 }
